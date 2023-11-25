@@ -7,10 +7,22 @@
     <title>Etch-a-Sketch</title>
 </head>
 <body>
-    <h1>This is Etch-a-Sketch</h1>
+    <div class="options-container">
+    <button class="button-style">Button</button>
+    <div >Choose a color:</div>
+    <input type="color" id="color-picker" name="color-picker" value="#555555">
+    <button id="color-btn" class="button-style">Color</button>
+    <button id="erase-btn" class="button-style">Erase Tool</button>
+    <p id="slider-value">Size of grid: </p>
+    <input id="slider" type="range" min="1" max="100" value="4">
+    <button id="reset-btn" class="button-style">Reset</button>
+    </div>
+
+    <div class="canvas-container">
     <div class="container-border">
     <div class="container">
         <div class="grid-canvas"></div>
+    </div>
     </div>
     </div>
 </body>
