@@ -4,14 +4,21 @@ let colorPicker = document.querySelector('#color-picker');
 let resetBtn = document.querySelector('#reset-btn');
 let eraseBtn = document.querySelector('#erase-btn');
 let colorBtn = document.querySelector('#color-btn');
+let randomColorBtn = document.querySelector('#random-color-btn');
+let sliderValue = document.querySelector('#slider-value');
+let allButtons = document.querySelectorAll('.button-style');
 const containerWidth = 640;
-let squaresPerSide = 4;
+// Corresponds to default slider value
+let squaresPerSide = 8;
 let loopConditionNumber = (squaresPerSide * squaresPerSide) + 1;
 let initialBoxColor = 'white';
 let changedBoxColor = '#555555';
 let gridBoxes;
 let mouseDown = false;
 let selectedColorSaved = '#555555';
+let boxRandomColor;
+
+sliderValue.textContent = `Grid size: ${squaresPerSide} x ${squaresPerSide}`;
 
 // Event listeners to check if mousedown is true
 document.addEventListener('mousedown', function() {
@@ -52,9 +59,18 @@ for (let i = 0; i < containerChildren.length; i++){
     });
 }
 
+colorPicker.addEventListener('input', function() {
+    console.log(this.value);
+    changedBoxColor = this.value;
+
+    selectedColorSaved = changedBoxColor;
+  });
+
 slider.oninput = function() {
     squaresPerSide = this.value;
     loopConditionNumber = (squaresPerSide * squaresPerSide) + 1;
+
+    sliderValue.textContent = `Grid size: ${squaresPerSide} x ${squaresPerSide}`;
 
     while (gridCanvas.firstChild){
         gridCanvas.removeChild(gridCanvas.firstChild);
@@ -90,23 +106,66 @@ slider.oninput = function() {
     
 }
 
-colorPicker.addEventListener('input', function() {
-    console.log(this.value);
-    changedBoxColor = this.value;
-
-    selectedColorSaved = changedBoxColor;
-  });
-
 resetBtn.addEventListener('click', () => {
     resetGrid();
 });
 
 eraseBtn.addEventListener('click', () => {
-    eraseGrid();
+eraseGrid();
+    for (let i = 0; i < containerChildren.length; i++){
+        containerChildren[i].addEventListener('mouseenter', function() {
+            if(mouseDown === true){
+                this.style.backgroundColor = eraseGrid();
+                console.log(`${i} was clicked`);
+            }
+        });
+    }
+    
+    for (let i = 0; i < containerChildren.length; i++){
+        containerChildren[i].addEventListener('mousedown', function() {
+            this.style.backgroundColor = eraseGrid();
+            console.log(`${i} was clicked`);
+        });
+    }
+
 });
 
 colorBtn.addEventListener('click', () => {
-    toggleBackToColor();
+
+    for (let i = 0; i < containerChildren.length; i++){
+        containerChildren[i].addEventListener('mouseenter', function() {
+            if(mouseDown === true){
+                this.style.backgroundColor = toggleBackToColor();
+                console.log(`${i} was clicked`);
+            }
+        });
+    }
+    
+    for (let i = 0; i < containerChildren.length; i++){
+        containerChildren[i].addEventListener('mousedown', function() {
+            this.style.backgroundColor = toggleBackToColor();
+            console.log(`${i} was clicked`);
+        });
+    }
+});
+
+randomColorBtn.addEventListener('click', () => {
+
+    for (let i = 0; i < containerChildren.length; i++){
+        containerChildren[i].addEventListener('mouseenter', function() {
+            if(mouseDown === true){
+                this.style.backgroundColor = generateRandomColor();
+                console.log(`${i} was clicked`);
+            }
+        });
+    }
+    
+    for (let i = 0; i < containerChildren.length; i++){
+        containerChildren[i].addEventListener('mousedown', function() {
+            this.style.backgroundColor = generateRandomColor();
+            console.log(`${i} was clicked`);
+        });
+    }
 });
 
 function resetGrid(){
@@ -123,6 +182,23 @@ function eraseGrid(){
 
 function toggleBackToColor(){
     changedBoxColor = selectedColorSaved;
-    console.log('changing back to color');
+    console.log('changing back to selected color');
 }
 
+function generateRandomColor(){
+    boxRandomColor = Math.floor(Math.random() * 16777215).toString(16);
+    boxRandomColor = '#' + boxRandomColor;
+    changedBoxColor = boxRandomColor;
+    console.log('generating rainbow color...');
+
+}
+
+allButtons.forEach((button) => {
+    button.addEventListener('click', (event) => {
+        allButtons.forEach((button) => {
+            button.classList.remove('button-selected');
+        });
+
+        event.currentTarget.classList.add('button-selected');
+    });
+});
