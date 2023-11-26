@@ -17,6 +17,7 @@ let gridBoxes;
 let mouseDown = false;
 let selectedColorSaved = '#555555';
 let boxRandomColor;
+let eraserColor;
 
 sliderValue.textContent = `Grid size: ${squaresPerSide} x ${squaresPerSide}`;
 
@@ -60,10 +61,16 @@ for (let i = 0; i < containerChildren.length; i++){
 }
 
 colorPicker.addEventListener('input', function() {
+
+    if(changedBoxColor === initialBoxColor){
+        eraserColor = '#ffffff';
+    }
+    
     console.log(this.value);
     changedBoxColor = this.value;
 
     selectedColorSaved = changedBoxColor;
+    console.log(`Color was changed to ${selectedColorSaved}`);
   });
 
 slider.oninput = function() {
@@ -111,11 +118,11 @@ resetBtn.addEventListener('click', () => {
 });
 
 eraseBtn.addEventListener('click', () => {
-eraseGrid();
+
     for (let i = 0; i < containerChildren.length; i++){
         containerChildren[i].addEventListener('mouseenter', function() {
             if(mouseDown === true){
-                this.style.backgroundColor = eraseGrid();
+                this.style.backgroundColor = initialBoxColor;
                 console.log(`${i} was clicked`);
             }
         });
@@ -123,7 +130,7 @@ eraseGrid();
     
     for (let i = 0; i < containerChildren.length; i++){
         containerChildren[i].addEventListener('mousedown', function() {
-            this.style.backgroundColor = eraseGrid();
+            this.style.backgroundColor = initialBoxColor;
             console.log(`${i} was clicked`);
         });
     }
@@ -135,7 +142,7 @@ colorBtn.addEventListener('click', () => {
     for (let i = 0; i < containerChildren.length; i++){
         containerChildren[i].addEventListener('mouseenter', function() {
             if(mouseDown === true){
-                this.style.backgroundColor = toggleBackToColor();
+                this.style.backgroundColor = selectedColorSaved;
                 console.log(`${i} was clicked`);
             }
         });
@@ -143,7 +150,7 @@ colorBtn.addEventListener('click', () => {
     
     for (let i = 0; i < containerChildren.length; i++){
         containerChildren[i].addEventListener('mousedown', function() {
-            this.style.backgroundColor = toggleBackToColor();
+            this.style.backgroundColor = selectedColorSaved;
             console.log(`${i} was clicked`);
         });
     }
@@ -154,7 +161,8 @@ randomColorBtn.addEventListener('click', () => {
     for (let i = 0; i < containerChildren.length; i++){
         containerChildren[i].addEventListener('mouseenter', function() {
             if(mouseDown === true){
-                this.style.backgroundColor = generateRandomColor();
+                generateRandomColor();
+                this.style.backgroundColor = changedBoxColor;
                 console.log(`${i} was clicked`);
             }
         });
@@ -162,7 +170,8 @@ randomColorBtn.addEventListener('click', () => {
     
     for (let i = 0; i < containerChildren.length; i++){
         containerChildren[i].addEventListener('mousedown', function() {
-            this.style.backgroundColor = generateRandomColor();
+            generateRandomColor();
+            this.style.backgroundColor = changedBoxColor;
             console.log(`${i} was clicked`);
         });
     }
@@ -175,22 +184,12 @@ function resetGrid(){
     console.log('reset!');
 }
 
-function eraseGrid(){
-    changedBoxColor = initialBoxColor;
-    console.log('erasing...');
-}
-
-function toggleBackToColor(){
-    changedBoxColor = selectedColorSaved;
-    console.log('changing back to selected color');
-}
-
 function generateRandomColor(){
     boxRandomColor = Math.floor(Math.random() * 16777215).toString(16);
     boxRandomColor = '#' + boxRandomColor;
     changedBoxColor = boxRandomColor;
     console.log('generating rainbow color...');
-
+    
 }
 
 allButtons.forEach((button) => {
